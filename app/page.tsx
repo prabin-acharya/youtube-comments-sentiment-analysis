@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface Video {
@@ -15,7 +16,7 @@ export default function Home() {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await fetch("/api/listPopularVideos");
+        const response = await fetch("/api/yt/listPopularVideos");
         const data = await response.json();
         setVideos(data.videos);
       } catch (error) {
@@ -29,40 +30,38 @@ export default function Home() {
   console.log(videos);
 
   return (
-    <main className="flex min-h-screen flex-col p-24">
-      <h2 className="font-semibold p-4 text-2xl">
-        Most Popular YouTube Videos
-      </h2>
+    <main className="flex min-h-screen flex-col p-16">
+      <h1 className="font-bold pb-6 text-3xl">
+        Youtube Comments Sentiment Analysis Demo
+      </h1>
+      <h2 className="font-semibold p-4 text-xl">Most Popular YouTube Videos</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {videos.map((video) => (
-          <div
-            key={video.videoId}
-            className="bg-white rounded-lg overflow-hidden shadow-md"
-          >
-            <Image
-              src={video.thumbnail}
-              alt={video.title}
-              width={500}
-              height={500}
-            />
+          <Link key={video.videoId} href={`/${video.videoId}`}>
+            <div
+              key={video.videoId}
+              className="bg-white rounded-lg overflow-hidden shadow-md"
+            >
+              <Image
+                src={video.thumbnail}
+                alt={video.title}
+                width={400}
+                height={400}
+              />
 
-            {/* <img
-              src={video.thumbnail}
-              alt={video.title}
-              className="w-full h-40 object-cover"
-            /> */}
-            <div className="p-4">
-              <p className="text-base font-semibold mb-2">{video.title}</p>
-              <a
-                href={`https://www.youtube.com/watch?v=${video.videoId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:underline"
-              >
-                Watch on YouTube
-              </a>
+              <div className="p-4">
+                <p className="text-base font-semibold mb-2">{video.title}</p>
+                <a
+                  href={`https://www.youtube.com/watch?v=${video.videoId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline"
+                >
+                  Watch on YouTube
+                </a>
+              </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </main>
