@@ -53,7 +53,7 @@ export default function Video({ params }: { params: { videoId: string } }) {
               {new Date(video.publishedAt).toDateString()}
             </span>
             <Link
-              href={`https://www.youtube.com/watch?v=${video.videoId}`}
+              href={`https://www.youtube.com/watch?v=${videoId}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 hover:underline inline px-4"
