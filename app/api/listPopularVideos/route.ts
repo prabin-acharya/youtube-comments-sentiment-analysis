@@ -8,12 +8,15 @@ export async function GET(request: Request) {
     const response = await fetch(
       `${API_URL}?key=${API_KEY}&part=snippet&chart=mostPopular&regionCode=US&maxResults=10`
     );
+
     const data = await response.json();
 
     const videos = data.items.map((item: any) => ({
       title: item.snippet.title,
       videoId: item.id,
-      thumbnail: item.snippet.thumbnails.default.url,
+      thumbnail: item.snippet.thumbnails.maxres
+        ? item.snippet.thumbnails.maxres.url
+        : item.snippet.thumbnails.default.url,
     }));
 
     // res.status(200).json(videos);
