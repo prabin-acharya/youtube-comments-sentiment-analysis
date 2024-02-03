@@ -20,6 +20,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
         const response = await fetch(`/api/yt/comments/${videoId}/`);
         const data = await response.json();
         setComments(data.comments);
+        console.log(data);
       } catch (error) {
         console.error("Error fetching video comments:", error);
       }

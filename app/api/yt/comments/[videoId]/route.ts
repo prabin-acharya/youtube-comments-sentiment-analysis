@@ -27,7 +27,18 @@ export async function GET(
       publishedAt: item.snippet.topLevelComment.snippet.publishedAt,
     }));
 
-    return Response.json({ comments });
+    const response2 = await axios.post("http://localhost:5000/predict", {
+      comments: comments.slice(0, 50),
+    });
+
+    const analysed_comments = response2.data;
+
+    console.log(analysed_comments, "#######");
+
+    return Response.json({
+      comments,
+      analysed_comments: analysed_comments.results,
+    });
   } catch (error) {
     console.error("Error fetching video details:", error);
 

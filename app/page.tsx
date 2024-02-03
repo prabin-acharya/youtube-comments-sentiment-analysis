@@ -30,7 +30,7 @@ export default function Home() {
   console.log(videos);
 
   return (
-    <main className="flex min-h-screen flex-col p-16">
+    <main className="flex min-h-screen flex-col p-16 text-white">
       <h1 className="font-bold pb-6 text-3xl">
         Youtube Comments Sentiment Analysis Demo
       </h1>
@@ -40,7 +40,7 @@ export default function Home() {
           <Link key={video.videoId} href={`/${video.videoId}`}>
             <div
               key={video.videoId}
-              className="bg-white rounded-lg overflow-hidden shadow-md"
+              className="bg-gray-600 rounded-lg overflow-hidden shadow-md"
             >
               <Image
                 src={video.thumbnail}

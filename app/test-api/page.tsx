@@ -4,11 +4,20 @@ import { useState } from "react";
 
 export default function TestAPIdeo() {
   const [inputComment, setInputComment] = useState<string>("");
-  const [result, setResult] = useState<string>("");
+  const [results, setResults] = useState<
+    {
+      comment: string;
+      predicted_emotion: string;
+    }[]
+  >([]);
   const [previousComment, setPreviousComment] = useState<string>("");
 
   const predictEmotionAPI = async () => {
     if (inputComment.length < 5) return;
+
+    const commentsArray = inputComment
+      .split(",")
+      .map((comment) => comment.trim());
 
     try {
       const response = await fetch("http://localhost:5000/predict", {
@@ -16,7 +25,7 @@ export default function TestAPIdeo() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: inputComment }),
+        body: JSON.stringify({ comments: commentsArray }),
       });
 
       if (!response.ok) {
@@ -24,12 +33,14 @@ export default function TestAPIdeo() {
       }
 
       const data = await response.json();
-      setResult(data.predicted_emotion);
+
+      console.log(data, "####");
+      setResults(data.results);
       setPreviousComment(inputComment);
       setInputComment("");
     } catch (error) {
       console.error("Error predicting emotion:", error);
-      setResult("Error predicting emotion. Please try again.");
+      //   setResults("Error predicting emotion. Please try again.");
     }
   };
   return (
@@ -45,7 +56,7 @@ export default function TestAPIdeo() {
               value={inputComment}
               onChange={(e) => setInputComment(e.target.value)}
               placeholder="Enter a comment..."
-              className=" border border-slate-600 text-xl p-2 outline-none rounded bg-slate-500 focus:border-slate-400 text-white"
+              className=" border border-slate-600 text-xl p-2 outline-none rounded bg-slate-500 focus:border-slate-400 text-white w-3/4"
             />
             <button
               onClick={() => predictEmotionAPI()}
@@ -55,16 +66,30 @@ export default function TestAPIdeo() {
             </button>
           </div>
 
-          {result && (
+          {results.length > 0 && (
             <div className="p-4 mt-12 bg-slate-500 rounded w-2/3 text-white">
-              <div className="flex mb-2">
+              {results?.map((comment) => (
+                <>
+                  <div className="flex mb-2">
+                    <span className="font-semibold mr-2">Comment: </span>{" "}
+                    <p>{comment.comment}</p>
+                  </div>
+                  <div className="flex mb-5">
+                    <span className="font-semibold mr-2">
+                      Prediceted Emotion:{" "}
+                    </span>{" "}
+                    <p>{comment.predicted_emotion}</p>
+                  </div>
+                </>
+              ))}
+              {/* <div className="flex mb-2">
                 <span className="font-semibold mr-2">Comment: </span>{" "}
                 <p>{previousComment}</p>
               </div>
               <div className="flex">
                 <span className="font-semibold mr-2">Prediceted Emotion: </span>{" "}
                 <p>{result}</p>
-              </div>
+              </div> */}
             </div>
           )}
         </div>
