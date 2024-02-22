@@ -23,7 +23,7 @@ export async function GET(
     const maxResults = 400; // Number of comments you want to fetch
 
     do {
-      const response = await axios.get(API_URL, {
+      const response: any = await axios.get(API_URL, {
         params: {
           key: API_KEY,
           part: "snippet",
