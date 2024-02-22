@@ -63,7 +63,9 @@ export default function Video({ params }: { params: { videoId: string } }) {
           </div>
           <div className="">
             <span className="font-semibold inline ">Description: </span>
-            <p className="text-md inline">{video.description}</p>
+            <p className="text-md inline">
+              {video.description.slice(0, 300)}...
+            </p>
           </div>
 
           <VideoComments videoId={videoId as string} />

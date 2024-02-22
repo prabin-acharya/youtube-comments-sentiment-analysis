@@ -13,7 +13,7 @@ export async function GET(request: Request) {
         part: "snippet",
         chart: "mostPopular",
         regionCode: "US",
-        maxResults: 10,
+        maxResults: 20,
       },
     });
 
