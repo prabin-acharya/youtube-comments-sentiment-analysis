@@ -28,8 +28,10 @@ export async function GET(request: NextRequest) {
     const videos = response.data.items.map((item: any) => ({
       title: item.snippet.title,
       videoId: item.id,
-      thumbnail: item.snippet.thumbnails.maxres
-        ? item.snippet.thumbnails.maxres.url
+      thumbnail: item.snippet.thumbnails.high
+        ? item.snippet.thumbnails.high.url
+        : item.snippet.thumbnails.medium
+        ? item.snippet.thumbnails.medium.url
         : item.snippet.thumbnails.default.url,
     }));
 
