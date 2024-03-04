@@ -1,5 +1,6 @@
 // components/VideoComments.tsx
 import { useEffect, useState } from "react";
+import { BsEmojiLaughingFill, BsFillEmojiFrownFill } from "react-icons/bs";
 
 interface Comment {
   author: string;
@@ -14,7 +15,7 @@ interface VideoCommentsProps {
 
 const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
   const [comments, setComments] = useState<Comment[]>([]);
-  const [selectedEmotion, setSelectedEmotion] = useState<string>("joy");
+  const [selectedEmotion, setSelectedEmotion] = useState<string>("");
   const [isLoading, setIsloading] = useState(false);
 
   useEffect(() => {
@@ -74,21 +75,38 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
   // emotion_classes = ["joy", "fear", "anger", "sadness", "neutral"];
   if (comments?.length > 1) {
     const joyComments = comments.filter(
-      (comment) => comment.predicted_emotion == "joy"
+      (comment) => comment.predicted_emotion == "Joy"
     );
     const fearComments = comments.filter(
-      (comment) => comment.predicted_emotion == "fear"
+      (comment) => comment.predicted_emotion == "Disappointment"
     );
     const angerComments = comments.filter(
       (comment) => comment.predicted_emotion == "anger"
     );
     const sadnessComments = comments.filter(
-      (comment) => comment.predicted_emotion == "sadness"
+      (comment) => comment.predicted_emotion == "Sadness"
     );
     const neutralComments = comments.filter(
-      (comment) => comment.predicted_emotion == "neutral"
+      (comment) => comment.predicted_emotion == "Neutral"
     );
   }
+
+  const renderEmoji = (emotion: string) => {
+    switch (emotion) {
+      case "Joy":
+        return "😁";
+      case "Sadness":
+        return "🙁";
+      case "Inquiry":
+        return "🤔";
+      case "Disappointment":
+        return "😞";
+      case "Neutral":
+        return "😐";
+      default:
+        return "😐";
+    }
+  };
 
   // console.log(selectedEmotion);
   // console.log(
@@ -101,50 +119,132 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
     <div className="py-4 mt-8">
       <h2 className="text-2xl font-bold mb-4">Video Comments</h2>
       <div className="flex mb-6">
-        <div
-          className={`flex-1 p-4 text-center font-semibold rounded-sm cursor-pointer  border border-gray-500 ${
-            selectedEmotion == "joy" ? "bg-gray-800" : "bg-gray-600"
+        <span
+          className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+            selectedEmotion == "" ? "bg-black text-white" : "bg-gray-200"
           }`}
-          onClick={() => setSelectedEmotion("joy")}
+          onClick={() => setSelectedEmotion("")}
         >
-          joy
+          All
+        </span>
+
+        <span className="border-2 mx-2 border-gray-300"></span>
+
+        <span
+          className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+            selectedEmotion == "Joy" ? "bg-black text-white" : "bg-gray-200"
+          }`}
+          onClick={() => setSelectedEmotion("Joy")}
+        >
+          Joy{" "}
+          <span className="font-normal text-xs">
+            {
+              comments?.filter((comment) => comment.predicted_emotion == "Joy")
+                .length
+            }
+          </span>
+        </span>
+
+        <div
+          className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+            selectedEmotion == "Sadness" ? "bg-black text-white" : "bg-gray-200"
+          }`}
+          onClick={() => setSelectedEmotion("Sadness")}
+        >
+          Sadness{" "}
+          <span className="font-normal text-xs">
+            {
+              comments?.filter(
+                (comment) => comment.predicted_emotion == "Sadness"
+              ).length
+            }
+          </span>
         </div>
 
         <div
-          className={`flex-1 p-4 text-center font-semibold rounded-sm cursor-pointer  border border-gray-500 ${
-            selectedEmotion == "fear" ? "bg-gray-800" : "bg-gray-600"
+          className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+            selectedEmotion == "Inquiry" ? "bg-black text-white" : "bg-gray-200"
           }`}
-          onClick={() => setSelectedEmotion("fear")}
+          onClick={() => setSelectedEmotion("Inquiry")}
         >
-          fear
+          Inquiry{" "}
+          <span className="font-normal text-xs">
+            {
+              comments?.filter(
+                (comment) => comment.predicted_emotion == "Inquiry"
+              ).length
+            }
+          </span>
         </div>
 
         <div
-          className={`flex-1 p-4 text-center font-semibold rounded-sm cursor-pointer  border border-gray-500 ${
-            selectedEmotion == "anger" ? "bg-gray-800" : "bg-gray-600"
+          className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+            selectedEmotion == "Disappointment"
+              ? "bg-black text-white"
+              : "bg-gray-200"
           }`}
-          onClick={() => setSelectedEmotion("anger")}
+          onClick={() => setSelectedEmotion("Disappointment")}
         >
-          anger
+          Disappointment{" "}
+          <span className="font-normal text-xs">
+            {
+              comments?.filter(
+                (comment) => comment.predicted_emotion == "Disappointment"
+              ).length
+            }
+          </span>
         </div>
 
         <div
-          className={`flex-1 p-4 text-center font-semibold rounded-sm cursor-pointer  border border-gray-500 ${
-            selectedEmotion == "sadness" ? "bg-gray-800" : "bg-gray-600"
+          className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+            selectedEmotion == "Neutral" ? "bg-black text-white" : "bg-gray-200"
           }`}
-          onClick={() => setSelectedEmotion("sadness")}
+          onClick={() => setSelectedEmotion("Neutral")}
         >
-          sadness
+          Neutral{" "}
+          <span className="font-normal text-xs">
+            {
+              comments?.filter(
+                (comment) => comment.predicted_emotion == "Neutral"
+              ).length
+            }
+          </span>
+        </div>
+
+        {/* <span className="border-2 mx-2 border-gray-300"></span> */}
+
+        {/* <div
+          className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+            selectedEmotion == "Positive"
+              ? "bg-black text-white"
+              : "bg-gray-200"
+          }`}
+          onClick={() => setSelectedEmotion("Neutral")}
+        >
+          Positive
         </div>
 
         <div
-          className={`flex-1 p-4 text-center font-semibold rounded-sm cursor-pointer  border border-gray-500 ${
-            selectedEmotion == "neutral" ? "bg-gray-800" : "bg-gray-600"
+          className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+            selectedEmotion == "Neutral2"
+              ? "bg-black text-white"
+              : "bg-gray-200"
           }`}
-          onClick={() => setSelectedEmotion("neutral")}
+          onClick={() => setSelectedEmotion("Neutral")}
         >
-          neutral
+          Neutral
         </div>
+
+        <div
+          className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+            selectedEmotion == "Negeative"
+              ? "bg-black text-white"
+              : "bg-gray-200"
+          }`}
+          onClick={() => setSelectedEmotion("Neutral")}
+        >
+          Negeative
+        </div> */}
       </div>
 
       <ul className="px-4">
@@ -153,9 +253,40 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
           .map((comment, index) => (
             <li key={index} className="mb-4 max-w-[500px]">
               <p className="font-semibold">{comment.text}</p>
-              <div>
+              <div className="text-xs">
                 <span className="text-gray-600">{comment.publishedAt} </span>
                 <span className="inline text-gray-500"> {comment.author}</span>
+              </div>
+            </li>
+          ))}
+
+        {/* All Comments */}
+        {selectedEmotion == "" &&
+          comments.map((comment, index) => (
+            <li key={index} className="mb-8 max-w-[600px]">
+              <div className="flex">
+                <div className="">
+                  <p className="font-semibold">{comment.text}</p>
+                  <div className="text-xs">
+                    <span className="text-gray-600">
+                      {comment.publishedAt}{" "}
+                    </span>
+                    <span className="inline text-gray-500">
+                      {" "}
+                      {comment.author}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-2 flex ">
+                  <div className="border border-red-600 flex h-fit rounded-l-full rounded-r-full p-2">
+                    <span className="text-2xl mr-2">
+                      {renderEmoji(comment.predicted_emotion)}{" "}
+                    </span>
+                    <span className="font-semibold">
+                      {comment.predicted_emotion}
+                    </span>
+                  </div>
+                </div>
               </div>
             </li>
           ))}

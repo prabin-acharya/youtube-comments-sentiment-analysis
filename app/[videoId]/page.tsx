@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { BiLike } from "react-icons/bi";
 import { IoSearchOutline } from "react-icons/io5";
 import VideoComments from "../components/VideoComments";
 
@@ -59,9 +60,14 @@ export default function Video({ params }: { params: { videoId: string } }) {
     return <p className="">Loading...</p>;
   }
 
+  console.log(video);
+
   return (
     <main className="flex min-h-screen flex-col px-16 py-3">
-      <h1 className="font-bold  text-2xl text-red-600 cursor-pointer">
+      <h1
+        className="font-bold  text-2xl text-red-600 cursor-pointer"
+        onClick={() => router.push("/")}
+      >
         Yt Demo
       </h1>
       <div className=" items-center justify-center flex  ">
@@ -127,8 +133,8 @@ export default function Video({ params }: { params: { videoId: string } }) {
             </p>
           </div>
 
-          <div className="py-4 flex flex-col">
-            <div className="flex flex-row w-1/2 py-8 justify-between">
+          <div className="py-4 flex flex-col ">
+            <div className="flex flex-row w-2/3 py-8 justify-between ">
               <div className="">
                 <span className="text-lg block">Views</span>
                 <span className="text-3xl font-bold">
@@ -136,33 +142,44 @@ export default function Video({ params }: { params: { videoId: string } }) {
                 </span>
               </div>
 
-              <div>
+              {/* <div>
                 <span className=" text-lg block">Likes </span>
                 <span className="text-3xl font-bold">
                   {formatViews(video.likes)}
                 </span>
-              </div>
-            </div>
+              </div> */}
 
-            <div className="flex flex-row w-1/2 py-8 justify-between">
-              <div className="">
-                <span className="text-lg block">Likes Ratio</span>
-                <span className="text-3xl font-bold">
-                  {video.views !== "0"
-                    ? (
-                        (Number(video.likes) / Number(video.views)) *
-                        100
-                      ).toFixed(2)
-                    : "0"}
-                  %
-                </span>
-              </div>
-
-              <div>
+              <div className="pr-20">
                 <span className=" text-lg block">Comments </span>
                 <span className="text-3xl font-bold">
                   {formatViews(video.comments)}
                 </span>
+              </div>
+            </div>
+
+            <div className="flex flex-row w-2/3 py-8 justify-between ">
+              <div className="">
+                <span className="text-lg block">Likes Ratio</span>
+                <div className="flex flex-row">
+                  <span className="text-3xl font-bold">
+                    {video.views !== "0"
+                      ? (
+                          (Number(video.likes) / Number(video.views)) *
+                          100
+                        ).toFixed(2)
+                      : "0"}
+                    %
+                  </span>
+                  <span className="px-4 border py-2 rounded-full border-red-600 flex flex-row items-center ml-2">
+                    <BiLike className="text-red-700 fill text-xl mr-2" />
+                    {formatViews(video.likes)}
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <span className=" text-lg block">Comments Intensity</span>
+                <span className="text-3xl font-bold">{}</span>
               </div>
             </div>
 
