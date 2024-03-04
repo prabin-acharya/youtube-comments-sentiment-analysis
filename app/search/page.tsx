@@ -16,6 +16,7 @@ interface Video {
 
 export default function Search() {
   const [videos, setVideos] = useState<Video[]>([]);
+  const [searchValue, setSearchValue] = useState("");
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -40,6 +41,18 @@ export default function Search() {
 
   console.log(videos);
 
+  const handleKeyDown = async (event: any) => {
+    if (event.key === "Enter") {
+      try {
+        const searchQuery = searchValue;
+        const encodedSearchQuery = encodeURIComponent(searchQuery);
+        router.push(`/search?query=${encodedSearchQuery}`);
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      }
+    }
+  };
+
   return (
     <main className="flex min-h-screen flex-col px-16 py-2 text-white">
       <h1 className="font-bold pb-6 text-2xl" onClick={() => router.push("/")}>
@@ -49,9 +62,11 @@ export default function Search() {
         <input
           placeholder="Search..."
           className="m-auto p-2 rounded outline-none text-white rounded-l-3xl rounded-r-3xl text-xl px-8 py-2 bg-slate-600"
+          onKeyDown={handleKeyDown}
+          onChange={(e) => setSearchValue(e.target.value)}
         />
       </div>
-      <h2 className="font-semibold p-4 text-xl">Most Popular YouTube Videos</h2>
+      {/* <h2 className="font-semibold p-4 text-xl">Most Popular YouTube Videos</h2> */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {videos.map((video, index) => (
           <Link key={index} href={`/${video.videoId.videoId}`}>

@@ -34,9 +34,9 @@ export default function Home() {
   const handleKeyDown = async (event: any) => {
     if (event.key === "Enter") {
       try {
-        router;
-        const response = await fetch(`/api/yt/search?query=${searchValue}`);
-        const data = await response.json();
+        const searchQuery = searchValue;
+        const encodedSearchQuery = encodeURIComponent(searchQuery);
+        router.push(`/search?query=${encodedSearchQuery}`);
       } catch (error) {
         console.error("Error fetching videos:", error);
       }
