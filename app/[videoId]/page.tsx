@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BiLike } from "react-icons/bi";
 import { IoSearchOutline } from "react-icons/io5";
+import Recommended from "../components/Recommended";
 import VideoComments from "../components/VideoComments";
 import YouTubeEmbed from "../components/YoutubeEmbed";
 
@@ -19,6 +20,17 @@ interface VideoDetails {
   views: string;
   likes: string;
   comments: string;
+}
+
+interface Comment {
+  author: string;
+  text: string;
+  publishedAt: string;
+  predicted_emotion: string;
+}
+
+interface VideoCommentsProps {
+  videoId: string;
 }
 
 export default function Video({ params }: { params: { videoId: string } }) {
@@ -58,7 +70,7 @@ export default function Video({ params }: { params: { videoId: string } }) {
   };
 
   if (!video || !videoId) {
-    return <p className="">Loading...</p>;
+    return <p className=""></p>;
   }
 
   console.log(video);
@@ -92,17 +104,10 @@ export default function Video({ params }: { params: { videoId: string } }) {
           </div>
         </div>
       </div>
-      <div className="w-full m-auto py-6 ">
-        <div className="max-w-screen-md mx-auto">
+      <div className="w-full m-auto py-6 flex ">
+        <div className="w-2/3">
           <h2 className="font-semibold py-6 text-2xl">{video.title}</h2>
 
-          {/* <Image
-            src={video.thumbnail}
-            alt={video.title}
-            className="w-full h-64 object-cover mb-4 rounded-md"
-            width={1200}
-            height={1200}
-          /> */}
           <YouTubeEmbed embedId={videoId} />
           <div className="py-2">
             <span className="text-gray-600 text-sm font-semibold">
@@ -199,12 +204,15 @@ export default function Video({ params }: { params: { videoId: string } }) {
 
           <VideoComments videoId={videoId as string} />
         </div>
+
+        {/*  */}
+        <Recommended />
       </div>
     </main>
   );
 }
 
-function formatViews(views) {
+function formatViews(views: any) {
   let num = views;
   let suffix = ["", "K", "M", "B", "T"];
   let tier = Math.floor(Math.log10(num) / 3);

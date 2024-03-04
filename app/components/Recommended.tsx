@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,7 +13,7 @@ interface Video {
   commentCount: number;
 }
 
-export default function Test() {
+export default function Recommended() {
   const [videos, setVideos] = useState<Video[]>([]);
 
   const router = useRouter();
@@ -25,7 +23,9 @@ export default function Test() {
       try {
         const response = await fetch("/api/yt/listPopularVideos");
         const data = await response.json();
-        setVideos(data.videos);
+        const shuffledVideos = shuffle(data.videos);
+
+        setVideos(shuffledVideos);
 
         console.log(data, "^^^^^");
       } catch (error) {
@@ -40,7 +40,7 @@ export default function Test() {
 
   return (
     <main className="flex min-h-screen flex-col px-16 py-3">
-      <h2 className="font-semibold p-4 text-xl">Most Popular YouTube Videos</h2>
+      <h2 className="font-semibold p-4 text-xl">Similar Videos</h2>
       <div className="flex flex-col">
         <div className="w-4/5 m-auto">
           {videos.map((video, index) => (
@@ -49,7 +49,7 @@ export default function Test() {
                 <div
                   key={video.videoId}
                   // className=" rounded-lg overflow-hidden items-center justify-center flex flex-col px-3"
-                  className="w-1/3 h-52 relative" // style={{ width: "450px", height: "500px" }}
+                  className="w-full h-52 relative" // style={{ width: "450px", height: "500px" }}
                 >
                   <Image
                     src={video.thumbnail}
@@ -83,4 +83,12 @@ export default function Test() {
       </div>
     </main>
   );
+}
+
+function shuffle(array: any) {
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }

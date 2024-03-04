@@ -16,11 +16,9 @@ interface VideoCommentsProps {
 const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [selectedEmotion, setSelectedEmotion] = useState<string>("");
-  const [isLoading, setIsloading] = useState(false);
 
   useEffect(() => {
     const fetchVideoComments = async () => {
-      setIsloading(true);
       try {
         const response = await fetch(`/api/yt/comments/${videoId}/`);
         const data = await response.json();
@@ -41,8 +39,6 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
         );
 
         console.log(filteredArray, "@@@", filteredArray2);
-
-        setIsloading(false);
       } catch (error) {
         console.error("Error fetching video comments:", error);
       }
@@ -72,25 +68,6 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
     );
   }
 
-  // emotion_classes = ["joy", "fear", "anger", "sadness", "neutral"];
-  if (comments?.length > 1) {
-    const joyComments = comments.filter(
-      (comment) => comment.predicted_emotion == "Joy"
-    );
-    const fearComments = comments.filter(
-      (comment) => comment.predicted_emotion == "Disappointment"
-    );
-    const angerComments = comments.filter(
-      (comment) => comment.predicted_emotion == "anger"
-    );
-    const sadnessComments = comments.filter(
-      (comment) => comment.predicted_emotion == "Sadness"
-    );
-    const neutralComments = comments.filter(
-      (comment) => comment.predicted_emotion == "Neutral"
-    );
-  }
-
   const renderEmoji = (emotion: string) => {
     switch (emotion) {
       case "Joy":
@@ -107,13 +84,6 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
         return "😐";
     }
   };
-
-  // console.log(selectedEmotion);
-  // console.log(
-  //   comments?.filter((comment) => comment.predicted_emotion == selectedEmotion)
-  // );
-
-  // console.log("allComments", comments);
 
   return (
     <div className="py-4 mt-8">
@@ -210,41 +180,6 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
             }
           </span>
         </div>
-
-        {/* <span className="border-2 mx-2 border-gray-300"></span> */}
-
-        {/* <div
-          className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
-            selectedEmotion == "Positive"
-              ? "bg-black text-white"
-              : "bg-gray-200"
-          }`}
-          onClick={() => setSelectedEmotion("Neutral")}
-        >
-          Positive
-        </div>
-
-        <div
-          className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
-            selectedEmotion == "Neutral2"
-              ? "bg-black text-white"
-              : "bg-gray-200"
-          }`}
-          onClick={() => setSelectedEmotion("Neutral")}
-        >
-          Neutral
-        </div>
-
-        <div
-          className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
-            selectedEmotion == "Negeative"
-              ? "bg-black text-white"
-              : "bg-gray-200"
-          }`}
-          onClick={() => setSelectedEmotion("Neutral")}
-        >
-          Negeative
-        </div> */}
       </div>
 
       <ul className="px-4">

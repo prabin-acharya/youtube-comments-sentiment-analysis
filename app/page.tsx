@@ -41,8 +41,22 @@ export default function Home() {
     if (event.key === "Enter") {
       try {
         const searchQuery = searchValue;
-        const encodedSearchQuery = encodeURIComponent(searchQuery);
-        router.push(`/search?query=${encodedSearchQuery}`);
+        console.log(searchQuery);
+        if (
+          searchQuery &&
+          searchQuery.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/)
+        ) {
+          const matchResult = searchQuery.match(
+            /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/
+          );
+          if (matchResult) {
+            const videoId = matchResult[1];
+            router.push(`/${videoId}`);
+          }
+        } else {
+          const encodedSearchQuery = encodeURIComponent(searchQuery);
+          router.push(`/search?query=${encodedSearchQuery}`);
+        }
       } catch (error) {
         console.error("Error fetching videos:", error);
       }
@@ -71,8 +85,22 @@ export default function Home() {
             className="border-2 rounded-r-full  py-3 px-6 cursor-pointer bg-gray-200 hover:bg-gray-300"
             onClick={() => {
               const searchQuery = searchValue;
-              const encodedSearchQuery = encodeURIComponent(searchQuery);
-              router.push(`/search?query=${encodedSearchQuery}`);
+              console.log(searchQuery);
+              if (
+                searchQuery &&
+                searchQuery.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/)
+              ) {
+                const matchResult = searchQuery.match(
+                  /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/
+                );
+                if (matchResult) {
+                  const videoId = matchResult[1];
+                  router.push(`/${videoId}`);
+                }
+              } else {
+                const encodedSearchQuery = encodeURIComponent(searchQuery);
+                router.push(`/search?query=${encodedSearchQuery}`);
+              }
             }}
           >
             <IoSearchOutline className="text-xl text-gray-500 " />

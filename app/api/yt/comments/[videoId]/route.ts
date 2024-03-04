@@ -20,7 +20,7 @@ export async function GET(
 
     let allComments: Comment[] = [];
     let nextPageToken: string | undefined = undefined;
-    const maxResults = 1000; // Number of comments you want to fetch
+    const maxResults = 400; // Number of comments you want to fetch
 
     do {
       const response: any = await axios.get(API_URL, {
@@ -44,11 +44,18 @@ export async function GET(
       nextPageToken = response.data.nextPageToken; // Update nextPageToken for next iteration
     } while (nextPageToken && allComments.length < maxResults);
 
-    const response2 = await axios.post("http://localhost:5000/predict_sent5", {
+    const promise1 = axios.post("http://localhost:5000/predict_sent5", {
       comments: allComments,
     });
 
+    const promise2 = axios.post("http://localhost:5000/predict_posneg", {
+      comments: allComments,
+    });
+
+    const [response2, response3] = await Promise.all([promise1, promise2]);
+
     const analysed_comments = response2.data;
+    const analysed_comments_posneg = response3.data;
 
     analysed_comments.results.sort((a: any, b: any) => {
       const confidenceA =
@@ -69,12 +76,6 @@ export async function GET(
       return 0;
     });
 
-    const response3 = await axios.post("http://localhost:5000/predict_posneg", {
-      comments: allComments,
-    });
-
-    const analysed_comments_posneg = response3.data;
-
     analysed_comments_posneg.results.sort((a: any, b: any) => {
       const confidenceA =
         typeof a.confidence === "string"
@@ -94,10 +95,7 @@ export async function GET(
       return 0;
     });
 
-    // console.log(analysed_comments, "#######");
-
     return Response.json({
-      // comments: allComments,
       analysed_comments: analysed_comments.results,
       analysed_comments_posneg: analysed_comments_posneg.results,
     });
