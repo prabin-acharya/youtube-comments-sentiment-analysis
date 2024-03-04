@@ -55,7 +55,10 @@ export default function Search() {
 
   return (
     <main className="flex min-h-screen flex-col px-16 py-3">
-      <h1 className="font-bold  text-2xl text-red-600 cursor-pointer">
+      <h1
+        className="font-bold  text-2xl text-red-600 cursor-pointer"
+        onClick={() => router.push("/")}
+      >
         Yt Demo
       </h1>
       <div className=" items-center justify-center flex  ">
@@ -67,15 +70,15 @@ export default function Search() {
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
           />
-          <div className="border-2 rounded-r-full  py-3 px-6 cursor-pointer bg-gray-200 hover:bg-gray-300">
-            <IoSearchOutline
-              className="text-xl text-gray-500 "
-              onClick={() => {
-                const searchQuery = searchValue;
-                const encodedSearchQuery = encodeURIComponent(searchQuery);
-                router.push(`/search?query=${encodedSearchQuery}`);
-              }}
-            />
+          <div
+            className="border-2 rounded-r-full  py-3 px-6 cursor-pointer bg-gray-200 hover:bg-gray-300"
+            onClick={() => {
+              const searchQuery = searchValue;
+              const encodedSearchQuery = encodeURIComponent(searchQuery);
+              router.push(`/search?query=${encodedSearchQuery}`);
+            }}
+          >
+            <IoSearchOutline className="text-xl text-gray-500 " />
           </div>
         </div>
       </div>

@@ -80,15 +80,15 @@ export default function Video({ params }: { params: { videoId: string } }) {
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
           />
-          <div className="border-2 rounded-r-full  py-3 px-6 cursor-pointer bg-gray-200 hover:bg-gray-300">
-            <IoSearchOutline
-              className="text-xl text-gray-500 "
-              onClick={() => {
-                const searchQuery = searchValue;
-                const encodedSearchQuery = encodeURIComponent(searchQuery);
-                router.push(`/search?query=${encodedSearchQuery}`);
-              }}
-            />
+          <div
+            className="border-2 rounded-r-full  py-3 px-6 cursor-pointer bg-gray-200 hover:bg-gray-300"
+            onClick={() => {
+              const searchQuery = searchValue;
+              const encodedSearchQuery = encodeURIComponent(searchQuery);
+              router.push(`/search?query=${encodedSearchQuery}`);
+            }}
+          >
+            <IoSearchOutline className="text-xl text-gray-500 " />
           </div>
         </div>
       </div>
