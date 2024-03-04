@@ -53,7 +53,10 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col px-16 py-3">
-      <h1 className="font-bold  text-2xl text-red-600 cursor-pointer">
+      <h1
+        className="font-bold  text-2xl text-red-600 cursor-pointer"
+        onClick={() => router.push("/")}
+      >
         Yt Demo
       </h1>
       <div className=" items-center justify-center flex  ">

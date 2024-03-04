@@ -45,7 +45,6 @@ export async function GET(request: NextRequest) {
         commentCount: item.statistics.commentCount,
         channelName: item.snippet.channelTitle,
         channelLogo: item.snippet.thumbnails.default.url,
-        description: item.snippet.description,
       };
       return acc;
     }, {});

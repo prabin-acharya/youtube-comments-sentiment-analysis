@@ -86,7 +86,7 @@ export default function Search() {
       </div>
       <div className="flex flex-col py-6">
         <div className="w-4/5 m-auto">
-          {videos.map((video, index) => (
+          {videos?.map((video, index) => (
             <Link key={index} href={`/${video.videoId}`}>
               <div key={video.videoId} className="flex py-2 cursor-pointer">
                 <div className="w-1/3 h-52 relative  overflow-hidden">
@@ -103,8 +103,8 @@ export default function Search() {
                   <p className="text-lg font-medium  mb-2">{video.title}</p>
                   <span>{formatViews(video.viewCount)}</span> <span>views</span>
                   <p className="">
-                    {video.description.length > 80
-                      ? video.description.substring(0, 80) + "..."
+                    {video.description?.length > 80
+                      ? video.description?.substring(0, 80) + "..."
                       : video.description}
                   </p>
                 </div>
