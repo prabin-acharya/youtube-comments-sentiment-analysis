@@ -20,7 +20,7 @@ export async function GET(
 
     let allComments: Comment[] = [];
     let nextPageToken: string | undefined = undefined;
-    const maxResults = 400; // Number of comments you want to fetch
+    const maxResults = 100; // Number of comments you want to fetch
 
     do {
       const response: any = await axios.get(API_URL, {
@@ -61,16 +61,16 @@ export async function GET(
     // console.log(comments.length, "###");
 
     const response2 = await axios.post("http://localhost:5000/predict_sent5", {
-      comments: allComments.slice(0, 100),
+      comments: allComments,
     });
 
     const analysed_comments = response2.data;
 
     const response3 = await axios.post("http://localhost:5000/predict_posneg", {
-      comments: allComments.slice(0, 100),
+      comments: allComments,
     });
 
-    const analysed_comments_posneg = response2.data;
+    const analysed_comments_posneg = response3.data;
 
     // console.log(analysed_comments, "#######");
 

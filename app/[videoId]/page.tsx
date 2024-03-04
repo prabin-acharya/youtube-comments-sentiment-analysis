@@ -28,8 +28,6 @@ export default function Video({ params }: { params: { videoId: string } }) {
         const response = await fetch(`/api/yt/video/${videoId}`);
         const data = await response.json();
         setVideo(data.videoDetails);
-
-        console.log(data, "####");
       } catch (error) {
         console.error("Error fetching video details:", error);
       }
@@ -43,7 +41,7 @@ export default function Video({ params }: { params: { videoId: string } }) {
   }
 
   return (
-    <main className="flex min-h-screen flex-col p-16 text-white">
+    <main className="flex min-h-screen flex-col p-16">
       <div>
         <h2 className="text-2xl font-bold mb-4">{video.title}</h2>
         <div className="max-w-screen-md mx-auto">

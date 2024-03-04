@@ -18,8 +18,8 @@ export async function GET(request: NextRequest) {
       params: {
         key: API_KEY,
         part: "snippet",
-        q: query || "Tom Cruise", // The search query
-        type: "video", // To search only videos
+        q: query || "Tom Cruise",
+        type: "video",
         regionCode: "US",
         maxResults: 20,
       },

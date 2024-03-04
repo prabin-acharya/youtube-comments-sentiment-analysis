@@ -27,6 +27,20 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
         console.log(data, "-----*");
         setComments(data.analysed_comments);
 
+        const filteredArray = data.analysed_comments?.filter((obj: any) => {
+          const confidence = parseFloat(obj.confidence);
+          return confidence > 0.85;
+        });
+
+        const filteredArray2 = data.analysed_comments_posneg?.filter(
+          (obj: any) => {
+            const confidence = parseFloat(obj.confidence);
+            return confidence > 0.85;
+          }
+        );
+
+        console.log(filteredArray, "@@@", filteredArray2);
+
         setIsloading(false);
       } catch (error) {
         console.error("Error fetching video comments:", error);
@@ -38,7 +52,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
 
   if (comments?.length === 0) {
     return (
-      <div className="flex text-white items-center justify-center p-8 pt-16 flex-col">
+      <div className="flex items-center justify-center p-8 pt-16 flex-col">
         <svg
           width="24"
           height="24"
@@ -46,10 +60,10 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
           xmlns="http://www.w3.org/2000/svg"
         >
           <style>{`.spinner_HIK5{transform-origin:center;animation:spinner_XVY9 1s cubic-bezier(0.36,.6,.31,1) infinite;} @keyframes spinner_XVY9{50%{transform:rotate(180deg)}100%{transform:rotate(360deg)}}`}</style>
-          <circle cx="12" cy="12" r="3" fill="white" />
+          <circle cx="12" cy="12" r="3" fill="black" />
           <g className="spinner_HIK5">
-            <circle cx="4" cy="12" r="3" fill="white" />
-            <circle cx="20" cy="12" r="3" fill="white" />
+            <circle cx="4" cy="12" r="3" fill="black" />
+            <circle cx="20" cy="12" r="3" fill="black" />
           </g>
         </svg>
         <p className="font-bold pt-4">Analysing Comments...</p>

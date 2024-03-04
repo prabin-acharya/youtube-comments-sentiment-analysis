@@ -16,7 +16,7 @@ export async function GET(
       params: {
         key: API_KEY,
         part: "snippet,statistics,contentDetails",
-        id: "tWYsfOSY9vY",
+        id: videoId,
       },
     });
     if (videoResponse.data.items.length === 0) {
