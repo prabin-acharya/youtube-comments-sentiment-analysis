@@ -8,10 +8,7 @@ import { IoSearchOutline } from "react-icons/io5";
 
 interface Video {
   title: string;
-  videoId: {
-    kund: string;
-    videoId: string;
-  };
+  videoId: string;
   thumbnail: string;
 }
 
@@ -86,12 +83,9 @@ export default function Search() {
       <div className="flex flex-col py-6">
         <div className="w-4/5 m-auto">
           {videos.map((video, index) => (
-            <Link key={index} href={`/${video.videoId.videoId}`}>
-              <div
-                key={video.videoId.videoId}
-                className="flex py-2 cursor-pointer"
-              >
-                <div className="w-1/3 h-56 relative  overflow-hidden">
+            <Link key={index} href={`/${video.videoId}`}>
+              <div key={video.videoId} className="flex py-2 cursor-pointer">
+                <div className="w-1/3 h-52 relative  overflow-hidden">
                   <Image
                     src={video.thumbnail}
                     alt={video.title}
