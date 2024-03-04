@@ -23,10 +23,11 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
       try {
         const response = await fetch(`/api/yt/comments/${videoId}/`);
         const data = await response.json();
+
+        console.log(data, "-----*");
         setComments(data.analysed_comments);
 
         setIsloading(false);
-        console.log(data.comments);
       } catch (error) {
         console.error("Error fetching video comments:", error);
       }
@@ -84,7 +85,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
 
   return (
     <div className="py-4 mt-8">
-      {/* <h2 className="text-2xl font-bold mb-4">Video Comments</h2>
+      <h2 className="text-2xl font-bold mb-4">Video Comments</h2>
       <div className="flex mb-6">
         <div
           className={`flex-1 p-4 text-center font-semibold rounded-sm cursor-pointer  border border-gray-500 ${
@@ -111,9 +112,9 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
           onClick={() => setSelectedEmotion("anger")}
         >
           anger
-        </div> */}
+        </div>
 
-      {/* <div
+        <div
           className={`flex-1 p-4 text-center font-semibold rounded-sm cursor-pointer  border border-gray-500 ${
             selectedEmotion == "sadness" ? "bg-gray-800" : "bg-gray-600"
           }`}
@@ -130,9 +131,9 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
         >
           neutral
         </div>
-      </div> */}
+      </div>
 
-      {/* <ul className="px-4">
+      <ul className="px-4">
         {comments
           ?.filter((comment) => comment.predicted_emotion == selectedEmotion)
           .map((comment, index) => (
@@ -144,7 +145,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
               </div>
             </li>
           ))}
-      </ul> */}
+      </ul>
     </div>
   );
 };

@@ -7,27 +7,23 @@ interface Comment {
   publishedAt: string;
 }
 
-export async function GET(
-  request: Request,
-  { params }: { params: { videoId: string } }
-) {
+export async function GET(request: Request) {
   try {
     console.log("#########################comments");
-    const videoId = params.videoId;
 
     const API_KEY = process.env.YOUTUBE_API;
     const API_URL = "https://www.googleapis.com/youtube/v3/commentThreads";
 
     let allComments: Comment[] = [];
     let nextPageToken: string | undefined = undefined;
-    const maxResults = 400; // Number of comments you want to fetch
+    const maxResults = 200; // Number of comments you want to fetch
 
     do {
       const response: any = await axios.get(API_URL, {
         params: {
           key: API_KEY,
           part: "snippet",
-          videoId: videoId,
+          videoId: "2pMc8NOd2Xw",
           maxResults: maxResults - allComments.length, // Adjust maxResults to remaining comments
           pageToken: nextPageToken, // Add this to fetch next page
         },
@@ -60,7 +56,7 @@ export async function GET(
 
     // console.log(comments.length, "###");
 
-    const response2 = await axios.post("http://localhost:5000/predict", {
+    const response2 = await axios.post("http://localhost:5000/predict_posneg", {
       comments: allComments.slice(0, 100),
     });
 
