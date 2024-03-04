@@ -1,4 +1,5 @@
 "use client";
+import { channel } from "diagnostics_channel";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -9,6 +10,11 @@ interface VideoDetails {
   description: string;
   publishedAt: string;
   thumbnail: string;
+  channelName: string;
+  channelImage: string;
+  views: string;
+  likes: string;
+  comments: string;
 }
 
 export default function Video({ params }: { params: { videoId: string } }) {
@@ -61,11 +67,37 @@ export default function Video({ params }: { params: { videoId: string } }) {
               Watch on YouTube
             </Link>
           </div>
+
+          <div className="">
+            <Image
+              src={video.channelImage}
+              className="rounded-full inline"
+              width={30}
+              height={30}
+              alt="channel logo"
+            />
+            <span className="font-semibold px-4">{video.channelName}</span>
+          </div>
           <div className="">
             <span className="font-semibold inline ">Description: </span>
             <p className="text-md inline">
               {video.description.slice(0, 300)}...
             </p>
+          </div>
+
+          <div className="py-4 flex flex-col">
+            <div>
+              <span className="font-semibold">Likes: </span>{" "}
+              <span>{video.likes}</span>
+            </div>
+            <div>
+              <span className="font-semibold">Views: </span>{" "}
+              <span>{video.views}</span>
+            </div>
+            <div>
+              <span className="font-semibold">Comments: </span>{" "}
+              <span>{video.comments}</span>
+            </div>
           </div>
 
           <VideoComments videoId={videoId as string} />
