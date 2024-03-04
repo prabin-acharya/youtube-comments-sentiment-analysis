@@ -84,18 +84,54 @@ export default function Video({ params }: { params: { videoId: string } }) {
           </div>
 
           <div className="py-4 flex flex-col">
-            <div>
-              <span className="font-semibold">Likes: </span>{" "}
-              <span>{video.likes}</span>
+            <div className="flex flex-row w-1/2 py-8 justify-between">
+              <div className="">
+                <span className="text-lg block">Views</span>
+                <span className="text-3xl font-bold">
+                  {formatViews(video.views)}
+                </span>
+              </div>
+
+              <div>
+                <span className=" text-lg block">Likes </span>
+                <span className="text-3xl font-bold">
+                  {formatViews(video.likes)}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-row w-1/2 py-8 justify-between">
+              <div className="">
+                <span className="text-lg block">Likes Ratio</span>
+                <span className="text-3xl font-bold">
+                  {video.views !== "0"
+                    ? (
+                        (Number(video.likes) / Number(video.views)) *
+                        100
+                      ).toFixed(2)
+                    : "0"}
+                  %
+                </span>
+              </div>
+
+              <div>
+                <span className=" text-lg block">Comments </span>
+                <span className="text-3xl font-bold">
+                  {formatViews(video.comments)}
+                </span>
+              </div>
+            </div>
+
+            {/* <div>
+              <span className="text-lg">Likes Ratio </span>
+              <br />
+              <span className="text-3xl">{video.comments}</span>
             </div>
             <div>
-              <span className="font-semibold">Views: </span>{" "}
-              <span>{video.views}</span>
-            </div>
-            <div>
-              <span className="font-semibold">Comments: </span>{" "}
-              <span>{video.comments}</span>
-            </div>
+              <span className="text-lg">Comments </span>
+              <br />
+              <span className="text-3xl">{video.comments}</span>
+            </div> */}
           </div>
 
           <VideoComments videoId={videoId as string} />
@@ -103,4 +139,16 @@ export default function Video({ params }: { params: { videoId: string } }) {
       </div>
     </main>
   );
+}
+
+function formatViews(views) {
+  let num = views;
+  let suffix = ["", "K", "M", "B", "T"];
+  let tier = Math.floor(Math.log10(num) / 3);
+
+  if (tier > 0) {
+    num = (num / Math.pow(10, tier * 3)).toFixed(1);
+  }
+
+  return num + suffix[tier];
 }
