@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { BiLike } from "react-icons/bi";
 import { IoSearchOutline } from "react-icons/io5";
 import VideoComments from "../components/VideoComments";
+import YouTubeEmbed from "../components/YoutubeEmbed";
 
 interface VideoDetails {
   title: string;
@@ -91,17 +92,18 @@ export default function Video({ params }: { params: { videoId: string } }) {
           </div>
         </div>
       </div>
-      <div className="w-4/5 m-auto py-6">
+      <div className="w-full m-auto py-6 border border-green-400">
         <div className="max-w-screen-md mx-auto">
           <h2 className="font-semibold py-6 text-2xl">{video.title}</h2>
 
-          <Image
+          {/* <Image
             src={video.thumbnail}
             alt={video.title}
             className="w-full h-64 object-cover mb-4 rounded-md"
             width={1200}
             height={1200}
-          />
+          /> */}
+          <YouTubeEmbed embedId={videoId} />
           <div className="py-2">
             <span className="text-gray-600 text-sm font-semibold">
               {new Date(video.publishedAt).toDateString()}
@@ -195,7 +197,7 @@ export default function Video({ params }: { params: { videoId: string } }) {
             </div> */}
           </div>
 
-          <VideoComments videoId={videoId as string} />
+          {/* <VideoComments videoId={videoId as string} /> */}
         </div>
       </div>
     </main>
