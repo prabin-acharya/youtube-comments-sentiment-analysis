@@ -262,7 +262,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ videoId }) => {
 
         {/* All Comments */}
         {selectedEmotion == "" &&
-          comments.map((comment, index) => (
+          comments?.map((comment, index) => (
             <li key={index} className="mb-8 max-w-[600px]">
               <div className="flex">
                 <div className="">

@@ -92,7 +92,7 @@ export default function Video({ params }: { params: { videoId: string } }) {
           </div>
         </div>
       </div>
-      <div className="w-full m-auto py-6 border border-green-400">
+      <div className="w-full m-auto py-6 ">
         <div className="max-w-screen-md mx-auto">
           <h2 className="font-semibold py-6 text-2xl">{video.title}</h2>
 
@@ -197,7 +197,7 @@ export default function Video({ params }: { params: { videoId: string } }) {
             </div> */}
           </div>
 
-          {/* <VideoComments videoId={videoId as string} /> */}
+          <VideoComments videoId={videoId as string} />
         </div>
       </div>
     </main>

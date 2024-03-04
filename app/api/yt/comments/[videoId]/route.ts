@@ -20,7 +20,7 @@ export async function GET(
 
     let allComments: Comment[] = [];
     let nextPageToken: string | undefined = undefined;
-    const maxResults = 100; // Number of comments you want to fetch
+    const maxResults = 1000; // Number of comments you want to fetch
 
     do {
       const response: any = await axios.get(API_URL, {
@@ -44,33 +44,55 @@ export async function GET(
       nextPageToken = response.data.nextPageToken; // Update nextPageToken for next iteration
     } while (nextPageToken && allComments.length < maxResults);
 
-    // const formattedComments = allComments.map((item: any) => ({
-    //   author: item.snippet.topLevelComment.snippet.authorDisplayName,
-    //   text: item.snippet.topLevelComment.snippet.textOriginal,
-    //   publishedAt: item.snippet.topLevelComment.snippet.publishedAt,
-    // }));
-
-    // console.log(response.data);
-
-    // const comments = response.data.items.map((item: any) => ({
-    //   author: item.snippet.topLevelComment.snippet.authorDisplayName,
-    //   text: item.snippet.topLevelComment.snippet.textOriginal,
-    //   publishedAt: item.snippet.topLevelComment.snippet.publishedAt,
-    // }));
-
-    // console.log(comments.length, "###");
-
     const response2 = await axios.post("http://localhost:5000/predict_sent5", {
       comments: allComments,
     });
 
     const analysed_comments = response2.data;
 
+    analysed_comments.results.sort((a: any, b: any) => {
+      const confidenceA =
+        typeof a.confidence === "string"
+          ? parseFloat(a.confidence)
+          : a.confidence;
+      const confidenceB =
+        typeof b.confidence === "string"
+          ? parseFloat(b.confidence)
+          : b.confidence;
+
+      if (confidenceA < confidenceB) {
+        return 1;
+      }
+      if (confidenceA > confidenceB) {
+        return -1;
+      }
+      return 0;
+    });
+
     const response3 = await axios.post("http://localhost:5000/predict_posneg", {
       comments: allComments,
     });
 
     const analysed_comments_posneg = response3.data;
+
+    analysed_comments_posneg.results.sort((a: any, b: any) => {
+      const confidenceA =
+        typeof a.confidence === "string"
+          ? parseFloat(a.confidence)
+          : a.confidence;
+      const confidenceB =
+        typeof b.confidence === "string"
+          ? parseFloat(b.confidence)
+          : b.confidence;
+
+      if (confidenceA < confidenceB) {
+        return 1;
+      }
+      if (confidenceA > confidenceB) {
+        return -1;
+      }
+      return 0;
+    });
 
     // console.log(analysed_comments, "#######");
 
