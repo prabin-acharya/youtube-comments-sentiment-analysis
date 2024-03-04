@@ -2,7 +2,9 @@
 import { channel } from "diagnostics_channel";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { IoSearchOutline } from "react-icons/io5";
 import VideoComments from "../components/VideoComments";
 
 interface VideoDetails {
@@ -19,8 +21,13 @@ interface VideoDetails {
 
 export default function Video({ params }: { params: { videoId: string } }) {
   const videoId = params.videoId;
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("query");
 
   const [video, setVideo] = useState<VideoDetails | null>(null);
+  const [searchValue, setSearchValue] = useState(searchQuery || "");
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchVideoDetails = async () => {
@@ -36,15 +43,52 @@ export default function Video({ params }: { params: { videoId: string } }) {
     fetchVideoDetails();
   }, [videoId]);
 
+  const handleKeyDown = async (event: any) => {
+    if (event.key === "Enter") {
+      try {
+        const searchQuery = searchValue;
+        const encodedSearchQuery = encodeURIComponent(searchQuery);
+        router.push(`/search?query=${encodedSearchQuery}`);
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      }
+    }
+  };
+
   if (!video || !videoId) {
     return <p className="">Loading...</p>;
   }
 
   return (
-    <main className="flex min-h-screen flex-col p-16">
-      <div>
-        <h2 className="text-2xl font-bold mb-4">{video.title}</h2>
+    <main className="flex min-h-screen flex-col px-16 py-3">
+      <h1 className="font-bold  text-2xl text-red-600 cursor-pointer">
+        Yt Demo
+      </h1>
+      <div className=" items-center justify-center flex  ">
+        <div className="flex flex-row w-2/5">
+          <input
+            placeholder="Search.."
+            className="flex-1 m-auto p-2 rounded-l-full text-xl px-4 py-2 border-2 w-2/5 outline-1 outline-gray-400 text-gray-900"
+            onKeyDown={handleKeyDown}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+          <div className="border-2 rounded-r-full  py-3 px-6 cursor-pointer bg-gray-200 hover:bg-gray-300">
+            <IoSearchOutline
+              className="text-xl text-gray-500 "
+              onClick={() => {
+                const searchQuery = searchValue;
+                const encodedSearchQuery = encodeURIComponent(searchQuery);
+                router.push(`/search?query=${encodedSearchQuery}`);
+              }}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="w-4/5 m-auto py-6">
         <div className="max-w-screen-md mx-auto">
+          <h2 className="font-semibold py-6 text-2xl">{video.title}</h2>
+
           <Image
             src={video.thumbnail}
             alt={video.title}
