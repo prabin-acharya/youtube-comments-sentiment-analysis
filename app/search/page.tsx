@@ -10,6 +10,10 @@ interface Video {
   title: string;
   videoId: string;
   thumbnail: string;
+  viewCount: number;
+  likesCount: number;
+  commentsCount: number;
+  description: string;
 }
 
 export default function Search() {
@@ -96,7 +100,13 @@ export default function Search() {
                 </div>
 
                 <div className="p-4">
-                  <p className="text-base font-semibold mb-2">{video.title}</p>
+                  <p className="text-lg font-medium  mb-2">{video.title}</p>
+                  <span>{formatViews(video.viewCount)}</span> <span>views</span>
+                  <p className="">
+                    {video.description.length > 80
+                      ? video.description.substring(0, 80) + "..."
+                      : video.description}
+                  </p>
                 </div>
               </div>
             </Link>
@@ -105,4 +115,16 @@ export default function Search() {
       </div>
     </main>
   );
+}
+
+function formatViews(views) {
+  let num = views;
+  let suffix = ["", "K", "M", "B", "T"];
+  let tier = Math.floor(Math.log10(num) / 3);
+
+  if (tier > 0) {
+    num = (num / Math.pow(10, tier * 3)).toFixed(1);
+  }
+
+  return num + suffix[tier];
 }

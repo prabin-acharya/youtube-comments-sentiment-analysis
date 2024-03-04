@@ -45,6 +45,7 @@ export async function GET(request: NextRequest) {
         commentCount: item.statistics.commentCount,
         channelName: item.snippet.channelTitle,
         channelLogo: item.snippet.thumbnails.default.url,
+        description: item.snippet.description,
       };
       return acc;
     }, {});
@@ -62,7 +63,7 @@ export async function GET(request: NextRequest) {
 
     console.log(videoItems);
 
-    return Response.json({ response: videos });
+    return Response.json({ videos });
   } catch (error) {
     console.error("Error fetching YouTube data:", error);
     return Response.json({ error });
