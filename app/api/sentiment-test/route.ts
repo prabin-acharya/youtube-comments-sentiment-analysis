@@ -40,23 +40,7 @@ export async function GET(request: Request) {
       nextPageToken = response.data.nextPageToken; // Update nextPageToken for next iteration
     } while (nextPageToken && allComments.length < maxResults);
 
-    // const formattedComments = allComments.map((item: any) => ({
-    //   author: item.snippet.topLevelComment.snippet.authorDisplayName,
-    //   text: item.snippet.topLevelComment.snippet.textOriginal,
-    //   publishedAt: item.snippet.topLevelComment.snippet.publishedAt,
-    // }));
-
-    // console.log(response.data);
-
-    // const comments = response.data.items.map((item: any) => ({
-    //   author: item.snippet.topLevelComment.snippet.authorDisplayName,
-    //   text: item.snippet.topLevelComment.snippet.textOriginal,
-    //   publishedAt: item.snippet.topLevelComment.snippet.publishedAt,
-    // }));
-
-    // console.log(comments.length, "###");
-
-    const response2 = await axios.post("http://localhost:5000/predict_posneg", {
+    const response2 = await axios.post("http://localhost:5000/predict_sent5", {
       comments: allComments.slice(0, 100),
     });
 
@@ -65,7 +49,7 @@ export async function GET(request: Request) {
     // console.log(analysed_comments, "#######");
 
     return Response.json({
-      comments: allComments,
+      // comments: allComments,
       analysed_comments: analysed_comments.results,
     });
   } catch (error) {

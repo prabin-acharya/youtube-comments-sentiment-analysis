@@ -10,26 +10,41 @@ export async function GET(
 
     const API_KEY = process.env.YOUTUBE_API;
     const API_URL = "https://www.googleapis.com/youtube/v3/videos";
+    const CHANNEL_URL = "https://www.googleapis.com/youtube/v3/channels";
 
-    const response = await axios.get(API_URL, {
+    const videoResponse = await axios.get(API_URL, {
       params: {
         key: API_KEY,
-        part: "snippet",
-        id: videoId,
+        part: "snippet,statistics,contentDetails",
+        id: "tWYsfOSY9vY",
       },
     });
-
-    if (response.data.items.length === 0) {
+    if (videoResponse.data.items.length === 0) {
       return Response.json({ error: "Video Not Found" });
     }
 
+    const channelId = videoResponse.data.items[0].snippet.channelId;
+    const channelResponse = await axios.get(CHANNEL_URL, {
+      params: {
+        key: API_KEY,
+        part: "snippet",
+        id: channelId,
+      },
+    });
+
     const videoDetails = {
-      title: response.data.items[0].snippet.title,
-      description: response.data.items[0].snippet.description,
-      publishedAt: response.data.items[0].snippet.publishedAt,
-      thumbnail: response.data.items[0].snippet.thumbnails.maxres
-        ? response.data.items[0].snippet.thumbnails.maxres.url
-        : response.data.items[0].snippet.thumbnails.default.url,
+      title: videoResponse.data.items[0].snippet.title,
+      description: videoResponse.data.items[0].snippet.description,
+      publishedAt: videoResponse.data.items[0].snippet.publishedAt,
+      thumbnail: videoResponse.data.items[0].snippet.thumbnails.maxres
+        ? videoResponse.data.items[0].snippet.thumbnails.maxres.url
+        : videoResponse.data.items[0].snippet.thumbnails.default.url,
+      channelName: videoResponse.data.items[0].snippet.channelTitle,
+      channelImage:
+        channelResponse.data.items[0].snippet.thumbnails.default.url,
+      views: videoResponse.data.items[0].statistics.viewCount,
+      likes: videoResponse.data.items[0].statistics.likeCount,
+      comments: videoResponse.data.items[0].statistics.commentCount,
     };
 
     return Response.json({ videoDetails });

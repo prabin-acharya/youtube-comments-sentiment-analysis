@@ -60,17 +60,24 @@ export async function GET(
 
     // console.log(comments.length, "###");
 
-    const response2 = await axios.post("http://localhost:5000/predict", {
+    const response2 = await axios.post("http://localhost:5000/predict_sent5", {
       comments: allComments.slice(0, 100),
     });
 
     const analysed_comments = response2.data;
 
+    const response3 = await axios.post("http://localhost:5000/predict_posneg", {
+      comments: allComments.slice(0, 100),
+    });
+
+    const analysed_comments_posneg = response2.data;
+
     // console.log(analysed_comments, "#######");
 
     return Response.json({
-      comments: allComments,
+      // comments: allComments,
       analysed_comments: analysed_comments.results,
+      analysed_comments_posneg: analysed_comments_posneg.results,
     });
   } catch (error) {
     console.error("Error fetching video details:", error);
