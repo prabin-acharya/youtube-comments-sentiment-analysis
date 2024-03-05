@@ -5,7 +5,10 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BiLike } from "react-icons/bi";
+import { CgDanger } from "react-icons/cg";
 import { IoSearchOutline } from "react-icons/io5";
+import { MdAutoFixHigh } from "react-icons/md";
+import LoadingSpinner from "../components/LoadingSpinner";
 import Recommended from "../components/Recommended";
 import VideoComments from "../components/VideoComments";
 import YouTubeEmbed from "../components/YoutubeEmbed";
@@ -43,6 +46,11 @@ export default function Video({ params }: { params: { videoId: string } }) {
 
   const router = useRouter();
 
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [commentsPosNeg, setCommentsPosNeg] = useState<Comment[]>([]);
+
+  const [selectedEmotion, setSelectedEmotion] = useState<string>("");
+
   useEffect(() => {
     const fetchVideoDetails = async () => {
       try {
@@ -69,11 +77,89 @@ export default function Video({ params }: { params: { videoId: string } }) {
     }
   };
 
+  //
+  // VideoComment component
+  //
+  useEffect(() => {
+    const fetchVideoComments = async () => {
+      try {
+        const response = await fetch(`/api/yt/comments/${videoId}/`);
+        const data = await response.json();
+
+        console.log(data, "-----*");
+        setComments(data.analysed_comments);
+        setCommentsPosNeg(data.analysed_comments_posneg);
+
+        const filteredArray = data.analysed_comments?.filter((obj: any) => {
+          const confidence = parseFloat(obj.confidence);
+          return confidence > 0.85;
+        });
+
+        const filteredArray2 = data.analysed_comments_posneg?.filter(
+          (obj: any) => {
+            const confidence = parseFloat(obj.confidence);
+            return confidence > 0.85;
+          }
+        );
+
+        console.log(filteredArray, "@@@", filteredArray2);
+      } catch (error) {
+        console.error("Error fetching video comments:", error);
+      }
+    };
+
+    videoId && fetchVideoComments();
+  }, [videoId]);
+
   if (!video || !videoId) {
     return <p className=""></p>;
   }
 
+  const renderEmoji = (emotion: string) => {
+    switch (emotion) {
+      case "Joy":
+        return "😁";
+      case "Sadness":
+        return "🙁";
+      case "Inquiry":
+        return "🤔";
+      case "Disappointment":
+        return "😞";
+      case "Neutral":
+        return "😐";
+      default:
+        return "😐";
+    }
+  };
+
   console.log(video);
+
+  let positives: Comment[] = [];
+  let negatives: Comment[] = [];
+  let neutrals: Comment[] = [];
+
+  if (commentsPosNeg.length > 0) {
+    positives = commentsPosNeg.filter(
+      (comment) => comment.predicted_emotion == "positive"
+    );
+    negatives = commentsPosNeg.filter(
+      (comment) => comment.predicted_emotion == "negative"
+    );
+    neutrals = commentsPosNeg.filter(
+      (comment) => comment.predicted_emotion == "neutral"
+    );
+  }
+
+  const total = positives.length + negatives.length;
+  const positivePercentage = (positives.length / total) * 100;
+  const negativePercentage = (negatives.length / total) * 100;
+
+  let higherPercentage;
+  if (positivePercentage > negativePercentage) {
+    higherPercentage = positivePercentage.toFixed(1);
+  } else {
+    higherPercentage = negativePercentage.toFixed(1);
+  }
 
   return (
     <main className="flex min-h-screen flex-col px-16 py-3">
@@ -156,7 +242,7 @@ export default function Video({ params }: { params: { videoId: string } }) {
                 </span>
               </div> */}
 
-              <div className="pr-20">
+              <div className="w-64">
                 <span className=" text-lg block">Comments </span>
                 <span className="text-3xl font-bold">
                   {formatViews(video.comments)}
@@ -184,9 +270,32 @@ export default function Video({ params }: { params: { videoId: string } }) {
                 </div>
               </div>
 
-              <div>
-                <span className=" text-lg block">Comments Intensity</span>
-                <span className="text-3xl font-bold">{}</span>
+              <div className="w-64">
+                <span className=" text-lg block my-2">Comments Sentiment</span>
+                <span className="text-xl font-bold flex w-fit">
+                  {commentsPosNeg && commentsPosNeg.length > 0 ? (
+                    <div className="flex flex-row">
+                      <span className="text-3xl">{higherPercentage}%</span>
+                      {positivePercentage > negativePercentage ? (
+                        <>
+                          <span className="border rounded-full p-2 px-3 border-green-500 text-green-700 mx-2 flex flex-row items-center font-medium">
+                            <MdAutoFixHigh className="text-green-600 mr-2 " />
+                            positive
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="border rounded-full p-2 px-3 border-red-500 text-red-700 mx-2 flex flex-row items-center font-medium">
+                            <CgDanger className="text-red-600 mr-2 " />
+                            negative
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  ) : (
+                    <LoadingSpinner />
+                  )}
+                </span>
               </div>
             </div>
 
@@ -202,7 +311,191 @@ export default function Video({ params }: { params: { videoId: string } }) {
             </div> */}
           </div>
 
-          <VideoComments videoId={videoId as string} />
+          {/* <VideoComments videoId={videoId as string} />
+           */}
+          {comments?.length === 0 ? (
+            <>
+              <div className="flex items-center justify-center p-8 pt-16 flex-col">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <style>{`.spinner_HIK5{transform-origin:center;animation:spinner_XVY9 1s cubic-bezier(0.36,.6,.31,1) infinite;} @keyframes spinner_XVY9{50%{transform:rotate(180deg)}100%{transform:rotate(360deg)}}`}</style>
+                  <circle cx="12" cy="12" r="3" fill="black" />
+                  <g className="spinner_HIK5">
+                    <circle cx="4" cy="12" r="3" fill="black" />
+                    <circle cx="20" cy="12" r="3" fill="black" />
+                  </g>
+                </svg>
+                <p className="font-bold pt-4">Analysing Comments...</p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="py-4 mt-8">
+                <h2 className="text-2xl font-bold mb-4">Video Comments</h2>
+                <div className="flex mb-6">
+                  <span
+                    className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+                      selectedEmotion == ""
+                        ? "bg-black text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() => setSelectedEmotion("")}
+                  >
+                    All
+                  </span>
+
+                  <span className="border-2 mx-2 border-gray-300"></span>
+
+                  <span
+                    className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+                      selectedEmotion == "Joy"
+                        ? "bg-black text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() => setSelectedEmotion("Joy")}
+                  >
+                    Joy{" "}
+                    <span className="font-normal text-xs">
+                      {
+                        comments?.filter(
+                          (comment) => comment.predicted_emotion == "Joy"
+                        ).length
+                      }
+                    </span>
+                  </span>
+
+                  <div
+                    className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+                      selectedEmotion == "Sadness"
+                        ? "bg-black text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() => setSelectedEmotion("Sadness")}
+                  >
+                    Sadness{" "}
+                    <span className="font-normal text-xs">
+                      {
+                        comments?.filter(
+                          (comment) => comment.predicted_emotion == "Sadness"
+                        ).length
+                      }
+                    </span>
+                  </div>
+
+                  <div
+                    className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+                      selectedEmotion == "Inquiry"
+                        ? "bg-black text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() => setSelectedEmotion("Inquiry")}
+                  >
+                    Inquiry{" "}
+                    <span className="font-normal text-xs">
+                      {
+                        comments?.filter(
+                          (comment) => comment.predicted_emotion == "Inquiry"
+                        ).length
+                      }
+                    </span>
+                  </div>
+
+                  <div
+                    className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+                      selectedEmotion == "Disappointment"
+                        ? "bg-black text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() => setSelectedEmotion("Disappointment")}
+                  >
+                    Disappointment{" "}
+                    <span className="font-normal text-xs">
+                      {
+                        comments?.filter(
+                          (comment) =>
+                            comment.predicted_emotion == "Disappointment"
+                        ).length
+                      }
+                    </span>
+                  </div>
+
+                  <div
+                    className={`mx-2  px-3 py-1 rounded font-semibold h-fit cursor-pointer  ${
+                      selectedEmotion == "Neutral"
+                        ? "bg-black text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() => setSelectedEmotion("Neutral")}
+                  >
+                    Neutral{" "}
+                    <span className="font-normal text-xs">
+                      {
+                        comments?.filter(
+                          (comment) => comment.predicted_emotion == "Neutral"
+                        ).length
+                      }
+                    </span>
+                  </div>
+                </div>
+
+                <ul className="px-4">
+                  {comments
+                    ?.filter(
+                      (comment) => comment.predicted_emotion == selectedEmotion
+                    )
+                    .map((comment, index) => (
+                      <li key={index} className="mb-4 max-w-[500px]">
+                        <p className="font-semibold">{comment.text}</p>
+                        <div className="text-xs">
+                          <span className="text-gray-600">
+                            {comment.publishedAt}{" "}
+                          </span>
+                          <span className="inline text-gray-500">
+                            {" "}
+                            {comment.author}
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+
+                  {/* All Comments */}
+                  {selectedEmotion == "" &&
+                    comments?.map((comment, index) => (
+                      <li key={index} className="mb-8 max-w-[600px]">
+                        <div className="flex">
+                          <div className="">
+                            <p className="font-semibold">{comment.text}</p>
+                            <div className="text-xs">
+                              <span className="text-gray-600">
+                                {comment.publishedAt}{" "}
+                              </span>
+                              <span className="inline text-gray-500">
+                                {" "}
+                                {comment.author}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="p-2 flex ">
+                            <div className="border border-red-600 flex h-fit rounded-l-full rounded-r-full p-2">
+                              <span className="text-2xl mr-2">
+                                {renderEmoji(comment.predicted_emotion)}{" "}
+                              </span>
+                              <span className="font-semibold">
+                                {comment.predicted_emotion}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            </>
+          )}
         </div>
 
         {/*  */}

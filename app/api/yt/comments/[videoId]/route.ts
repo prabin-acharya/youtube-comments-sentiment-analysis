@@ -20,7 +20,7 @@ export async function GET(
 
     let allComments: Comment[] = [];
     let nextPageToken: string | undefined = undefined;
-    const maxResults = 400; // Number of comments you want to fetch
+    const maxResults = 100; // Number of comments you want to fetch
 
     do {
       const response: any = await axios.get(API_URL, {
